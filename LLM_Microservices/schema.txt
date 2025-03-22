@@ -1,0 +1,73 @@
+CREATE TABLE dependant (
+  dependant_id SERIAL PRIMARY KEY,
+  dependant_name VARCHAR(100) NOT NULL,
+  dependant_address VARCHAR(255),
+  dependant_contact VARCHAR(20),
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE member (
+  member_id SERIAL PRIMARY KEY,
+  dependant_id INT REFERENCES dependant(dependant_id),
+  member_name VARCHAR(100) NOT NULL,
+  member_email VARCHAR(100) UNIQUE NOT NULL,
+  date_of_birth TIMESTAMP,
+  gender VARCHAR(10),
+  address VARCHAR(255),
+  phone_number VARCHAR(15),
+  member_effective_start_date TIMESTAMP,
+  member_effective_end_date TIMESTAMP,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE plan (
+  plan_id SERIAL PRIMARY KEY,
+  member_id INT NOT NULL REFERENCES member(member_id),
+  plan_name VARCHAR(100) NOT NULL,
+  plan_description TEXT,
+  plan_start_date TIMESTAMP,
+  plan_end_date TIMESTAMP,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE service (
+  service_id SERIAL PRIMARY KEY,
+  service_name VARCHAR(100) NOT NULL,
+  service_description TEXT,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE plan_coverage (
+  plan_coverage_id SERIAL PRIMARY KEY,
+  plan_id INT NOT NULL REFERENCES plan(plan_id),
+  service_id INT NOT NULL REFERENCES service(service_id),
+  allowed_amount DECIMAL(10,2) NOT NULL,
+  copay DECIMAL(5,2) NOT NULL,
+  coinsurance DECIMAL(5,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE provider (
+  provider_id SERIAL PRIMARY KEY,
+  provider_name VARCHAR(100) NOT NULL,
+  provider_type VARCHAR(50),
+  address VARCHAR(255),
+  contact_number VARCHAR(15),
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE claim (
+  claim_id SERIAL PRIMARY KEY,
+  member_id INT NOT NULL REFERENCES member(member_id),
+  service_id INT NOT NULL REFERENCES service(service_id),
+  provider_id INT NOT NULL REFERENCES provider(provider_id),
+  claim_amount DECIMAL(10,2) NOT NULL,
+  service_date TIMESTAMP,
+  submission_date TIMESTAMP,
+  approval_date TIMESTAMP,
+  claim_status VARCHAR(10) NOT NULL,
+  created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TYPE gender AS ENUM ('M', 'F', 'Other');
+CREATE TYPE claim_status AS ENUM ('Pending', 'Approved', 'Rejected');
