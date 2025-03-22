@@ -1,0 +1,1 @@
+MYSQL_URI = 'mysql+pymysql://root:password@localhost:3306/HealthInsuraceEnquirySystem'
