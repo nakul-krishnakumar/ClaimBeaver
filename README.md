@@ -1,4 +1,4 @@
-# ClaimEase: Insurance Claims Processing Chatbot
+# ClaimBeaver: Insurance Claims Processing Chatbot
 
 ClaimEase is an intelligent chatbot designed to streamline insurance claims processing, providing users with a seamless and efficient experience.
 
