@@ -1,0 +1,695 @@
+{
+  "agent_id": "",
+  "last_modification_timestamp": 1742695252846,
+  "voice_id": "11labs-Myra",
+  "interruption_sensitivity": 0.8,
+  "agent_name": "Claims",
+  "response_engine": {
+    "type": "conversation-flow",
+    "conversation_flow_id": "conversation_flow_0f05f5b6aad5"
+  },
+  "language": "hi-IN",
+  "opt_out_sensitive_data_storage": false,
+  "post_call_analysis_data": [
+    {
+      "name": "Do you currently have a steady place to live?",
+      "description": "",
+      "type": "enum",
+      "choices": [
+        "Yes.",
+        "Yes, but I’m worried about losing it.",
+        "No."
+      ]
+    },
+    {
+      "name": "Do you feel safe in your current living situation?",
+      "description": "",
+      "type": "enum",
+      "choices": [
+        "Yes.",
+        "No, I feel unsafe sometimes.",
+        "No, I feel unsafe often."
+      ]
+    },
+    {
+      "name": "Do you have problems with any of the following in your home?",
+      "description": "",
+      "type": "enum",
+      "choices": [
+        "Pests (e.g., bugs, ants, or mice).",
+        "Mold.",
+        "Plumbing issues or water leaks.",
+        "Heating or cooling problems.",
+        "None of the above."
+      ]
+    },
+    {
+      "name": "Within the past 12 months, have you worried about running out of food before you had money to buy more?",
+      "description": "",
+      "type": "enum",
+      "choices": [
+        "Often true.",
+        "Sometimes true.",
+        "Never true."
+      ]
+    },
+    {
+      "name": "In the past 12 months, has lack of reliable transportation prevented you from:",
+      "description": "",
+      "type": "enum",
+      "choices": [
+        "Attending medical appointments",
+        "Getting to work or school",
+        "Running errands or daily activities",
+        "None of the above."
+      ]
+    },
+    {
+      "name": "Are you currently employed?",
+      "description": "",
+      "type": "enum",
+      "choices": [
+        "Yes, full-time.",
+        "Yes, part-time.",
+        "No, I’m unemployed and looking for work.",
+        "No, I’m not seeking work right now."
+      ]
+    },
+    {
+      "type": "number",
+      "name": "Calculate the number of concerned questions",
+      "description": ""
+    }
+  ],
+  "max_call_duration_ms": 3600000,
+  "voicemail_detection_timeout_ms": 30000,
+  "post_call_analysis_model": "gpt-4o-mini",
+  "phones": [
+    {
+      "phone_number": "+19702935709",
+      "phone_number_type": "custom",
+      "phone_number_pretty": "+19702935709",
+      "nickname": "Free One",
+      "inbound_agent_id": "agent_e3d2c0e3400c2d98bc80b26381",
+      "inbound_webhook_url": "https://marten-light-kingfish.ngrok-free.app/api/inbound-webhook",
+      "last_modification_timestamp": 1742658024743
+    }
+  ],
+  "llmType": "Conversation Flow",
+  "voiceName": "Myra",
+  "voiceAvatarUrl": "https://retell-utils-public.s3.us-west-2.amazonaws.com/Myra.png",
+  "retellLlmData": null,
+  "conversationFlow": {
+    "conversation_flow_id": "conversation_flow_0f05f5b6aad5",
+    "global_prompt": "#### **Role:**\n\nA professional and friendly AI customer support agent for a medical insurance provider.\n\n#### **Objective:**\n\nAssist customers by verifying their identity, answering claim-related queries, and guiding new users through account registration if necessary.\n\n#### **Skills:**\n\n1. Identify customers using phone numbers via API.\n2. Retrieve claim-related information via API and relay it verbatim.\n3. Assist unregistered users with account creation.\n4. Maintain a polite, natural, and professional tone.\n5. Support conversations in both English and Hindi based on user preference.\n\n---\n\n### **Rules:**\n\n1. **Get the initial data**: Call the get-name function and pass the user_number to it, save the customer_name and flag returned.\n2. **Check User Registration:** Use the `{{flag}}` variable to determine if the caller is registered.\n    - If `{{flag}} = true`, proceed with query resolution.\n    - If `{{flag}} = false`, guide the user through registration.\n2. **Identity Verification:**\n    - Match `{{phone_number}}` with the API database.\n    - If identified, confirm the name with the caller `{{customer_name}}`.\n3. **Query Handling:**\n    - Fetch claim-related data from the API and relay it verbatim.\n    - Store API responses as `{{response}}`.\n4. **Account Registration (if unregistered):**\n    - Collect full name, DOB, and insurance type.\n    - Confirm details before proceeding.\n    - After all the details are collected, call the set-details function with the details.\n5. **Language Adaptation:**\n    - Detect Hindi in user input and respond in Hindi.\n6. **End of Call Etiquette:**\n    - Always ask if the user has additional queries before ending the call.\n    - Use polite closing statements.\n\n---\n\n### **Conversation Flow:**\n\n#### **1. Greeting & Identification**\n\n_\"Hello! This is your medical insurance support assistant. May I have your registered phone number to assist you?\"_\n\n- Fetch phone number and check `{{flag}}`.\n- If registered (`true`), proceed to query resolution.\n- If unregistered (`false`), offer registration.\n\n#### **2. Handling Registered Users**\n\n- Verify identity: _\"I see your name is {{customer_name}}, and your date of birth is {{dob}}. Can you confirm this information?\"_\n- If confirmed:\n    - Fetch claim details: _\"How can I assist you with your claim today?\"_\n    - Retrieve claim information via API and respond with `{{response}}`.\n    - Ask: _\"Would you like any additional assistance?\"_\n    - If no further queries, _\"Thank you for reaching out. Have a great day!\"_\n\n#### **3. Handling Unregistered Users**\n\n- Inform: _\"I see that you don't have an account. Would you like to register now?\"_\n- If yes:\n    - Collect details (Full Name, DOB, Email, Phone Number).\n    - Confirm information before proceeding.\n    - Complete registration and inform the user.\n- Proceed to query handling after registration.\n\n#### **4. Language Adaptation**\n\n- If user speaks in Hindi:\n    - _\"क्या मैं आपकी किसी और चीज़ में मदद कर सकता हूँ?\"_\n    - Continue conversation in Hindi.\n\n#### **5. Call Closure**\n\n- Always ask for additional queries.\n- Politely close the conversation: _\"Thank you for contacting medical insurance support. Have a great day!\"_\n\n---\n\n### **Example Scenarios**\n\n✅ **Registered User Query**\n\n- _User:_ \"I want to check my claim status.\"\n- _AI:_ \"Sure! Fetching details now... Your claim is currently under review. Would you like any further assistance?\"\n\n✅ **Unregistered User Registration**\n\n- _User:_ \"I don’t have an account.\"\n- _AI:_ \"No problem! Let’s get you registered. Can you please provide your full name and date of birth?\"\n\n✅ **Language Switching**\n\n- _User:_ \"मुझे क्लेम की जानकारी चाहिए।\"\n- _AI:_ \"ज़रूर! कृपया एक क्षण दें, मैं जानकारी प्राप्त कर रहा हूँ...\"",
+    "nodes": [
+      {
+        "instruction": {
+          "type": "prompt",
+          "text": "say \"Sorry but we don't have this number registered with anyone yet\". Then ask if they would like to create one?"
+        },
+        "name": "Unregistered User Flow",
+        "edges": [
+          {
+            "destination_node_id": "node-1735945722891",
+            "condition": "If the customer wants to create it.",
+            "id": "edge-1"
+          },
+          {
+            "destination_node_id": "node-1735940675562",
+            "condition": "if the customer doesn't want to create it.",
+            "id": "edge-2"
+          }
+        ],
+        "start_speaker": "agent",
+        "id": "start-node-1735866339701",
+        "type": "conversation",
+        "display_position": {
+          "x": 1000,
+          "y": 346
+        }
+      },
+      {
+        "instruction": {
+          "type": "prompt",
+          "text": "Apologize and nicely say goodbye."
+        },
+        "name": "Wrong User",
+        "edges": [
+          {
+            "condition": "Describe the transition condition",
+            "id": "edge-1735940675562"
+          }
+        ],
+        "id": "node-1735940675562",
+        "type": "conversation",
+        "display_position": {
+          "x": 2000,
+          "y": 0
+        },
+        "interruption_sensitivity": 1,
+        "skip_response_edge": {
+          "destination_node_id": "node-1735940779550",
+          "condition": "Skip response",
+          "id": "edge-1735940773868"
+        }
+      },
+      {
+        "name": "End Call",
+        "id": "node-1735940779550",
+        "type": "end",
+        "display_position": {
+          "x": 2500,
+          "y": 110
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Politely end the call"
+        }
+      },
+      {
+        "transfer_destination": {
+          "type": "predefined",
+          "number": "+918867716707"
+        },
+        "edge": {
+          "destination_node_id": "node-1736611024399",
+          "condition": "Transfer failed",
+          "id": "edge-1735944226760"
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Transferring your call now."
+        },
+        "name": "Transfer Call",
+        "global_node_setting": {
+          "condition": "When User is angry or request a human agent."
+        },
+        "id": "node-1735944226760",
+        "transfer_option": {
+          "type": "cold_transfer",
+          "show_transferee_as_caller": false
+        },
+        "type": "transfer_call",
+        "display_position": {
+          "x": 0,
+          "y": 1143
+        }
+      },
+      {
+        "name": "User Registration",
+        "edges": [
+          {
+            "destination_node_id": "node-1735946518945",
+            "condition": "If customer agreed",
+            "id": "edge-1735945722891"
+          },
+          {
+            "destination_node_id": "node-1735940675562",
+            "condition": "if customer declines",
+            "id": "edge-1736611119064"
+          }
+        ],
+        "id": "node-1735945722891",
+        "type": "conversation",
+        "display_position": {
+          "x": 1500,
+          "y": 354
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Tell them that it is great but before we continue, do they agree to proceed and share your data with us?"
+        }
+      },
+      {
+        "name": "Screening Questions 1",
+        "edges": [
+          {
+            "destination_node_id": "node-1735946944585",
+            "condition": "If name is given",
+            "id": "edge-1735946518945"
+          }
+        ],
+        "id": "node-1735946518945",
+        "type": "conversation",
+        "display_position": {
+          "x": 2000,
+          "y": 376
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Ask the user for their full name.\nAsk for full name → Save as customer_name."
+        }
+      },
+      {
+        "name": "Screening Questions 2",
+        "edges": [
+          {
+            "destination_node_id": "node-1735947010220",
+            "condition": "After customer gives the date of birth.",
+            "id": "edge-1735946944585"
+          }
+        ],
+        "id": "node-1735946944585",
+        "type": "conversation",
+        "display_position": {
+          "x": 2500,
+          "y": 376
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Ask the user for their date of birth.\nUse this dob instead of {{dob}} from now on."
+        }
+      },
+      {
+        "name": "Screening Questions 3",
+        "edges": [
+          {
+            "destination_node_id": "node-1742682534951",
+            "condition": "After customer gives the insurance type",
+            "id": "edge-1735947010220"
+          }
+        ],
+        "id": "node-1735947010220",
+        "type": "conversation",
+        "display_position": {
+          "x": 3000,
+          "y": 376
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Ask the user what type of medical insurance they have.\nUse that information instead of {{insurance_type}} from now on."
+        }
+      },
+      {
+        "instruction": {
+          "type": "prompt",
+          "text": "tell user there's a technical issue right now, we will call back in a bit. End the call politely."
+        },
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "Describe the transition condition",
+            "id": "edge-1736611024399"
+          }
+        ],
+        "id": "node-1736611024399",
+        "type": "conversation",
+        "display_position": {
+          "x": 500,
+          "y": 1097
+        },
+        "skip_response_edge": {
+          "destination_node_id": "node-1736611042908",
+          "condition": "Skip response",
+          "id": "edge-1736611053194"
+        }
+      },
+      {
+        "name": "End Call",
+        "id": "node-1736611042908",
+        "type": "end",
+        "display_position": {
+          "x": 1072.53108786713,
+          "y": 1117.8504720804058
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Politely end the call"
+        }
+      },
+      {
+        "tool_id": "tool-1742674527566",
+        "name": "Phone Number Lookup",
+        "edges": [
+          {
+            "destination_node_id": "start-node-1735866339701",
+            "condition": "If the flag is false",
+            "id": "edge-1742674643180"
+          },
+          {
+            "destination_node_id": "node-1742683383676",
+            "condition": "if the flag is true",
+            "id": "edge-1742676571970"
+          }
+        ],
+        "global_node_setting": {
+          "condition": "When the caller's name needs to be found."
+        },
+        "id": "node-1742674532614",
+        "type": "function",
+        "tool_type": "local",
+        "speak_during_execution": false,
+        "display_position": {
+          "x": 315.46069761994573,
+          "y": 524.7047668156953
+        },
+        "interruption_sensitivity": 0,
+        "wait_for_result": true
+      },
+      {
+        "tool_id": "tool-1742682331854",
+        "instruction": {
+          "type": "prompt",
+          "text": "Please wait while we process your details."
+        },
+        "name": "Set-details",
+        "edges": [
+          {
+            "destination_node_id": "node-1742682781632",
+            "condition": "If flag is false",
+            "id": "edge-1742682706336"
+          },
+          {
+            "destination_node_id": "node-1742683383676",
+            "condition": "If flag is true",
+            "id": "edge-1742682707416"
+          }
+        ],
+        "id": "node-1742682534951",
+        "type": "function",
+        "tool_type": "local",
+        "speak_during_execution": true,
+        "display_position": {
+          "x": 3500,
+          "y": 354
+        },
+        "wait_for_result": true
+      },
+      {
+        "name": "End Call",
+        "id": "node-1742682770072",
+        "type": "end",
+        "display_position": {
+          "x": 4500,
+          "y": 466
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Politely end the call"
+        }
+      },
+      {
+        "instruction": {
+          "type": "prompt",
+          "text": "Say that there was some issue on our end and try again later."
+        },
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "Describe the transition condition",
+            "id": "edge-1742682781632"
+          }
+        ],
+        "id": "node-1742682781632",
+        "type": "conversation",
+        "display_position": {
+          "x": 4000,
+          "y": 356
+        },
+        "skip_response_edge": {
+          "destination_node_id": "node-1742682770072",
+          "condition": "Skip response",
+          "id": "edge-1742682816344"
+        }
+      },
+      {
+        "instruction": {
+          "type": "prompt",
+          "text": "say \"What insurance query do you have?\" and then Save query as -> {{query}}"
+        },
+        "name": "Conversation",
+        "edges": [
+          {
+            "destination_node_id": "node-1742694787546",
+            "condition": "After customer give the answer",
+            "id": "edge-1742683383676"
+          }
+        ],
+        "global_node_setting": {
+          "condition": "If the user has a query, a doubt, or wants to know about somehting."
+        },
+        "id": "node-1742683383676",
+        "type": "conversation",
+        "display_position": {
+          "x": 4000,
+          "y": 745
+        }
+      },
+      {
+        "name": "End Call",
+        "id": "node-1742683393516",
+        "type": "end",
+        "display_position": {
+          "x": 5500,
+          "y": 870
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": "Politely end the call"
+        }
+      },
+      {
+        "tool_id": "tool-1742694784194",
+        "name": "Get-query",
+        "edges": [
+          {
+            "destination_node_id": "node-1742695087886",
+            "condition": "On getting the response",
+            "id": "edge-1742695201877"
+          }
+        ],
+        "id": "node-1742694787546",
+        "type": "function",
+        "tool_type": "local",
+        "speak_during_execution": false,
+        "display_position": {
+          "x": 4500,
+          "y": 821
+        },
+        "wait_for_result": true
+      },
+      {
+        "instruction": {
+          "type": "prompt",
+          "text": "say the \"{{response}}\""
+        },
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "Describe the transition condition",
+            "id": "edge-1742695087886"
+          }
+        ],
+        "id": "node-1742695087886",
+        "type": "conversation",
+        "display_position": {
+          "x": 5000,
+          "y": 760
+        },
+        "skip_response_edge": {
+          "destination_node_id": "node-1742683393516",
+          "condition": "Skip response",
+          "id": "edge-1742695193514"
+        }
+      },
+      {
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "Describe the transition condition",
+            "id": "edge-1742697332899"
+          }
+        ],
+        "id": "node-1742697332899",
+        "type": "conversation",
+        "display_position": {
+          "x": 0,
+          "y": 1427
+        },
+        "instruction": {
+          "type": "prompt",
+          "text": ""
+        }
+      },
+      {
+        "name": "Logic Split Node",
+        "edges": [
+          {
+            "destination_node_id": "node-1742683383676",
+            "condition": "If the flag is true",
+            "id": "edge-1742697346940"
+          }
+        ],
+        "id": "node-1742697340123",
+        "else_edge": {
+          "destination_node_id": "start-node-1735866339701",
+          "condition": "Else",
+          "id": "edge-1742697340123"
+        },
+        "type": "branch",
+        "display_position": {
+          "x": 500,
+          "y": 799
+        }
+      },
+      {
+        "instruction": {
+          "type": "prompt",
+          "text": "say something like Hello! This is your medical insurance support assistant. Please wait while we check your phone number."
+        },
+        "name": "Conversation",
+        "edges": [
+          {
+            "condition": "Describe the transition condition",
+            "id": "edge-1742701100659"
+          }
+        ],
+        "id": "node-1742701100659",
+        "type": "conversation",
+        "display_position": {
+          "x": -158.90347263598125,
+          "y": 583.5171414569575
+        },
+        "interruption_sensitivity": 0,
+        "skip_response_edge": {
+          "destination_node_id": "node-1742674532614",
+          "condition": "Skip response",
+          "id": "edge-1742701189801"
+        }
+      }
+    ],
+    "start_node_id": "node-1742701100659",
+    "start_speaker": "agent",
+    "tools": [
+      {
+        "name": "get-name",
+        "description": "this function gets the 'name' of the caller by passing the caller's phone number. Use the name returned by it instead of {{customer_name}} only if the retuned value of 'flag' is true. ",
+        "tool_id": "tool-1742674527566",
+        "type": "custom",
+        "parameters": {
+          "returns": {
+            "type": "object",
+            "properties": {
+              "customer_name": {
+                "type": "string",
+                "description": "The name of the customer associated with the provided phone number."
+              },
+              "flag": {
+                "type": "boolean",
+                "description": "Indicates whether the returned customer_name should be used (true) or not (false)."
+              }
+            },
+            "required": [
+              "customer_name",
+              "flag"
+            ]
+          },
+          "type": "object",
+          "properties": {
+            "phone_number": {
+              "type": "string",
+              "description": "The phone number of the caller for which the customer name is to be fetched."
+            }
+          },
+          "required": [
+            "phone_number"
+          ]
+        },
+        "url": "https://marten-light-kingfish.ngrok-free.app/api/get-name"
+      },
+      {
+        "name": "set-details",
+        "description": "This function sends the name, date of birth, phone Number of the caller and medical insurance type of the user to the api. The api then return a flag with value either true or false.",
+        "tool_id": "tool-1742682331854",
+        "type": "custom",
+        "parameters": {
+          "returns": {
+            "type": "object",
+            "properties": {
+              "flag": {
+                "type": "boolean",
+                "description": "A flag indicating the result of the API processing (true or false)."
+              }
+            },
+            "required": [
+              "flag"
+            ]
+          },
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The full name of the user."
+            },
+            "insuranceType": {
+              "type": "string",
+              "description": "The type of medical insurance the user has."
+            },
+            "phoneNumber": {
+              "type": "string",
+              "description": "The phone number of the caller."
+            },
+            "dob": {
+              "type": "string",
+              "description": "The user's date of birth in YYYY-MM-DD format."
+            }
+          },
+          "required": [
+            "name",
+            "dob",
+            "insuranceType",
+            "phoneNumber"
+          ]
+        },
+        "url": "https://marten-light-kingfish.ngrok-free.app/api/set-details"
+      },
+      {
+        "name": "get-query",
+        "description": "This function sends the name of the user, and the query of the user to the api. It receives the 'response' from the api. Save the response as {{response}}",
+        "tool_id": "tool-1742694784194",
+        "type": "custom",
+        "parameters": {
+          "returns": {
+            "type": "object",
+            "properties": {
+              "response": {
+                "type": "string",
+                "description": "The response received from the API based on the user's query."
+              }
+            },
+            "required": [
+              "response"
+            ]
+          },
+          "type": "object",
+          "properties": {
+            "customer_name": {
+              "type": "string",
+              "description": "The name of the user making the query."
+            },
+            "query": {
+              "type": "string",
+              "description": "The insurance query that the user has."
+            }
+          },
+          "required": [
+            "customer_name",
+            "query"
+          ]
+        },
+        "url": "https://marten-light-kingfish.ngrok-free.app/api/get-query"
+      }
+    ],
+    "model_choice": {
+      "type": "cascading",
+      "model": "gpt-4o"
+    },
+    "begin_tag_display_position": {
+      "x": -364.60890900620734,
+      "y": 838.1109541363263
+    },
+    "knowledge_base_ids": []
+  },
+  "llmURL": null
+}
