@@ -1,14 +1,12 @@
 import GlassBackground from "../../components/ui/glass-bg";
-import LogoText from "../../components/ui/logo";
+import Header from "../../components/ui/Header";
 
 export default function Layout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
         <main className="h-full" suppressHydrationWarning>
-            <div className="">
-                <LogoText />
-            </div>
+            <Header />
             {children}
             <GlassBackground />
         </main>
