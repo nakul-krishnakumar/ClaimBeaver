@@ -21,7 +21,7 @@ class ClaimInquiryResponse(BaseModel):
 
 def load_prompt():
     template = """"You are a HealthCare Claims Inquiry Agent. You are supposed to answer queries realted to the claims 
-    raised by members. Based on the member data, claim data, plans data and plan coverage data, answer the user's question:
+    raised by members. Answer in 1 line or sentence. Based on the member data, claim data, plans data and plan coverage data, answer the user's question:
     
     Member Data : {member_data}
     Claim Data : {claim_data}
