@@ -15,9 +15,11 @@ app = FastAPI(title="Healthcare Claims Inquiry API")
 class ClaimInquiryRequest(BaseModel):
     details: dict
     message: str
+    userEmail: str
 
 class ClaimInquiryResponse(BaseModel):
     response: str
+    userEmail: str
 
 def load_prompt():
     template = """"You are a HealthCare Claims Inquiry Agent. You are supposed to answer queries realted to the claims 
@@ -53,6 +55,7 @@ def ask(json_input):
     plans = data["details"]["plans"]
     plan_coverages = data["details"]["planCoverages"]
     question = data["message"]
+    email = data["userEmail"]
     
     chain = load_chain()
     
@@ -63,16 +66,16 @@ def ask(json_input):
         'plan_coverage_data': plan_coverages, 
         'question': question
     })
-    return result
+    return result,email
 
 @app.post("/api/claims-inquiry", response_model=ClaimInquiryResponse)
 async def claims_inquiry(request: ClaimInquiryRequest):
     try:
         json_input = json.dumps(request.model_dump())
         
-        response = ask(json_input)
+        response,userEmail = ask(json_input)
         
-        return ClaimInquiryResponse(response=response)
+        return ClaimInquiryResponse(response=response,userEmail=userEmail)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing inquiry: {str(e)}")
 

@@ -8,7 +8,7 @@ class LLM:
         load_dotenv()
         #gemini_key = os.getenv('GEMINI_API_KEY')
         openai_key = os.getenv('OPENAI_API_KEY')
-        self.sql_llm = ChatOpenAI(openai_api_base= "http://192.168.10.73:1234/v1",
+        self.sql_llm = ChatOpenAI(openai_api_base= "http://192.168.4.46:1234/v1",
             openai_api_key=openai_key,
             model_name="qwen-2.5-3b-text_to_sql"
         )
