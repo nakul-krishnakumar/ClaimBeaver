@@ -1,10 +1,9 @@
 @import "tailwindcss";
-
 :root {
   --background: #ffffff;
   --foreground: #7CB9E8;
+  --animation-duration: 1.5s; /* Increased from 0.8s to 1.5s */
 }
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -14,7 +13,6 @@
   --color-secondary: #F7F7F7; /* grayish white */
   --color-stroke: #b0b0b0; /* little bit darker gray than secondary-color (or #B0B0B0) */
 }
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -22,31 +20,153 @@
     overflow: hidden;
   }
 }
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+button:hover {
+    cursor: pointer;
+}
+
+/* Animation keyframes */
+@keyframes fadeInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-80px); /* Increased movement distance */
+  }
+  20% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(80px); /* Increased movement distance */
+  }
+  20% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInFromBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(80px); /* Increased movement distance */
+  }
+  20% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 
 @layer utilities {
-    .main-intro {
-        @apply relative w-full h-full text-center flex flex-col justify-center align-middle;  
+    .header {
+        @apply z-50 absolute w-full px-[25px] flex justify-between;
+        animation: fadeIn var(--animation-duration) ease forwards;
     }
-
+    .logo {
+        @apply flex justify-center items-center h-min font-black -tracking-[0.25em];
+        animation: fadeInFromLeft var(--animation-duration) ease forwards;
+    }
+    .logo-text {
+        @apply absolute -z-10 mt-[1px] ml-[1px] text-[50px] text-transparent [-webkit-text-stroke:1px_var(--color-stroke)];
+    }
+    .logo-text_stroke {
+        @apply text-[50px] bg-gradient-to-b from-primary/80 from-20% to-80% to-primary-dark text-transparent bg-clip-text;
+    }
+    .auth-btns-wrapper {
+        @apply text-white flex flex-row items-center gap-5;
+        animation: fadeInFromRight var(--animation-duration) ease forwards;
+    }
+    .login-btn {
+        @apply w-[120px] h-[40px] bg-white text-black rounded-[40px]
+        transition-transform duration-300 ease-in-out;
+    }
+    .login-btn:hover {
+        @apply -translate-1;
+    }
+    .login-btn_stroke {
+        @apply absolute -z-10 w-[120px] h-[40px] border-[0.5px] border-stroke rounded-[41px];
+    }
+    .signup-btn {
+        @apply w-[120px] h-[40px] border-[1px] rounded-[40px]
+        transition-transform duration-300 ease-in-out;
+    }
+    .signup-btn:hover {
+        @apply bg-gradient-to-r from-primary from-20% to-primary-dark text-black border-none -translate-1;
+    }
+    .signup-btn_stroke {
+        @apply absolute -z-10 w-[120px] h-[40px] border-[0.5px] border-stroke rounded-[41px];
+    }
+    .main-intro {
+        @apply relative w-full h-full text-center flex flex-col justify-center items-center;
+    }
     .main-slogan {
         @apply text-[77px] font-bold py-3 tracking-[-0.03em] leading-[0.85em]
         bg-gradient-to-b from-primary to-primary-dark text-transparent bg-clip-text;
+        animation: fadeInFromLeft calc(var(--animation-duration) + 0.5s) ease forwards;
     }
-
     .main-slogan_stroke {
-        @apply hidden absolute -z-10 w-full lg:flex justify-center align-middle -mt-[153px] ml-[3.5px]
+        @apply hidden absolute -z-10 w-full lg:flex justify-center items-center -mt-[153px] ml-[3.5px]
         text-[77px] font-bold py-3 tracking-[-0.03em] leading-[0.85em]
         text-transparent [-webkit-text-stroke:1px_var(--color-stroke)];
+        animation: fadeIn calc(var(--animation-duration) + 0.8s) ease forwards;
     }
-      
+     
     .sub-slogan {
         @apply text-[18px] font-semibold tracking-[-0.04em] bg-gradient-to-r
       from-primary to-primary-dark text-transparent bg-clip-text;
+        animation: fadeInFromRight calc(var(--animation-duration) + 1s) ease forwards;
+    }
+    .main-btns {
+        @apply flex justify-center items-center gap-5 pt-5;
+        animation: fadeInFromBottom calc(var(--animation-duration) + 1.2s) ease forwards;
+    }
+    .start-chat-btn {
+        @apply w-[150px] h-[50px] text-white bg-gradient-to-r from-primary from-20% to-primary-dark rounded-[40px]
+        flex justify-center items-center gap-1 transition-transform duration-300 ease-in-out;
+    }
+    .start-chat-btn:hover {
+        @apply -translate-1;
+    }
+    .start-chat-btn_stroke {
+        @apply absolute -z-10 -ml-[75px] self-start w-[150px] h-[50px] border-[0.5px] border-stroke rounded-[40px];
+    }
+    .discover-more-btn {
+        @apply w-[180px] h-[50px] text-black bg-secondary rounded-[40px] transition-transform duration-300 ease-in-out
+        flex justify-center items-center gap-2;
+    }
+    
+    .discover-more-btn:hover {
+        @apply -translate-1;
+    }
+    
+    .discover-more-btn_stroke {
+        @apply absolute -z-10 -ml-[90px] w-[180px] h-[50px] border-[0.5px] border-stroke rounded-[41px];
     }
 }

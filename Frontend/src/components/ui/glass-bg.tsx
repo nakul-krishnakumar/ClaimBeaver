@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const GlassBackground = () => {
   return (
-    <div className="absolute inset-0 w-full h-full">
+    <div className="-z-50 inset-0 w-full h-full">
       <Image src="/glass_bg.svg" alt="background" fill className="object-cover" />
       <div className="absolute inset-0 from-white/70 to-transparent backdrop-blur-3xl">
         <div className="absolute inset-0 overflow-hidden">
